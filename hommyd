@@ -1,0 +1,63 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          hommyd
+# Required-Start:    hostname $local_fs
+# Required-Stop:
+# Should-Start:
+# Default-Start:     2 3 4 5
+# Default-Stop:	     0 1 6
+# Short-Description: Create dynamic part of /etc/hommyd
+# Description:       /etc/hommyd is a hommy deamon. 
+### END INIT INFO
+
+PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+. /lib/lsb/init-functions
+
+export DEBUG=*,-l2cap-ble
+
+do_start () {
+	# Start proxy and hommy as deamons
+	echo starting hommy deamon
+#	rm /var/log/hommyd.forever.log
+#	rm /var/log/hommyd.out
+#	rm /var/log/hommyd.err
+	forever start -p /var/run/hommy/ -c /usr/local/bin/node --uid "hommydaemon" -a \
+		-l /var/log/hommy.forever.log \
+		-o /var/log/hommy.out \
+		-e /var/log/hommy.err \
+		--sourceDir /home/pi/git/node-projects/hommy/ hommy.js
+	log_end_msg $?
+}
+
+do_stop () {
+	echo stopping hommy daemon
+	forever stop /home/pi/git/node-projects/hommy/hommy.js
+	log_end_msg $?
+}
+
+do_status () {
+	forever list | grep hommydaemon
+}
+
+case "$1" in
+  start|"")
+	do_start
+	;;
+  restart|reload|force-reload)
+	do_stop
+	do_start
+	;;
+  stop)
+	do_stop
+	;;
+  status)
+	do_status
+	exit $?
+	;;
+  *)
+	echo "Usage: hommyd [start|stop|status]" >&2
+	exit 3
+	;;
+esac
+
+:
