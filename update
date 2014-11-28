@@ -1,0 +1,36 @@
+#!/bin/bash 
+
+. /lib/lsb/init-functions
+BACKUP=/home/pi/git/hommy_start_scripts
+
+echo changing dir to /etc/init.d
+cd /etc/init.d
+log_end_msg $?
+
+echo backing up proxyd
+cp nexod $BACKUP
+log_end_msg $?
+
+echo backing up hommyd
+cp hommyd $BACKUP
+log_end_msg $?
+
+echo backing up logrotate script
+cp /etc/logrotate.d/hommy $BACKUP
+
+echo setting up nexod
+sudo update-rc.d nexod defaults
+log_end_msg $?
+
+echo enabling nexod
+sudo update-rc.d nexod enable
+log_end_msg $?
+
+echo setting up hommyd
+sudo update-rc.d hommyd defaults
+log_end_msg $?
+
+echo enabling hommyd
+sudo update-rc.d hommyd enable
+log_end_msg $?
+
