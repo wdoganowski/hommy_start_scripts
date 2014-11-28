@@ -11,33 +11,35 @@
 ### END INIT INFO
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
+JS_FILE=/home/pi/git/node-projects/nexo_proxy/proxy.js
+PID=/var/run/nexo-proxy.pid
+LOG_FILE=/var/log/nexo_proxy.log
 . /lib/lsb/init-functions
 
-export DEBUG=proxy
+export DEBUG=proxy,client
 
 do_start () {
 	# Start proxy and hommy as deamons
-	echo starting nexo-proxy deamon
-#	rm /var/log/nexo-proxy.forever.log
-#	rm /var/log/nexo-proxy.out
-#	rm /var/log/nexo-proxy.err
-	forever start -p /var/run/hommy/ -c /usr/local/bin/node --uid "nexo-proxy" -a \
-		-l /var/log/nexo-proxy.forever.log \
-		-o /var/log/nexo-proxy.out \
-		-e /var/log/nexo-proxy.err \
-		--sourceDir /home/pi/git/node-projects/nexo_proxy/ proxy.js
-	log_end_msg $?
+	echo starting nexo-proxy deamon $JS_FILE
+	if [ -f $PID ]; then
+	  do_stop;
+	fi
+	nohup node $JS_FILE 2>&1 > $LOG_FILE &
+        log_end_msg $?
+        echo $! > $PID
 	sleep 5
 }
 
 do_stop () {
 	echo stopping daemons
-	forever stop /home/pi/git/node-projects/nexo_proxy/proxy.js
+	kill -KILL $(cat $PID)
 	log_end_msg $?
+	rm $PID
 }
 
 do_status () {
-	forever list | grep nexo-proxy
+	ps -Al | grep $(cat $PID)
+	log_end_msg $?
 }
 
 case "$1" in

@@ -1,6 +1,4 @@
-/var/log/hommy.forever.log
-/var/log/hommy.out
-/var/log/hommy.err
+/var/log/hommy.log
 {
         rotate 30
         daily
@@ -10,13 +8,12 @@
         delaycompress
         sharedscripts
         postrotate
+		cd /etc/init.d
                 invoke-rc.d hommyd reload > /dev/null
         endscript
 }
 
-/var/log/nexo-proxy.forever.log
-/var/log/nexo-proxy.out
-/var/log/nexo-proxy.err
+/var/log/nexo-proxy.log
 {
         rotate 30
         daily
@@ -26,6 +23,7 @@
         delaycompress
         sharedscripts
         postrotate
+		cd /etc/init.d
                 invoke-rc.d nexod reload > /dev/null
         endscript
 }

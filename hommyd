@@ -12,31 +12,34 @@
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
 . /lib/lsb/init-functions
+JS_FILE=/home/pi/git/node-projects/hommy/hommy.js
+PID=/var/run/hommy.pid
+LOG_FILE=/var/log/hommy.log
+. /lib/lsb/init-functions
 
 export DEBUG=*,-l2cap-ble
 
 do_start () {
 	# Start proxy and hommy as deamons
-	echo starting hommy deamon
-#	rm /var/log/hommyd.forever.log
-#	rm /var/log/hommyd.out
-#	rm /var/log/hommyd.err
-	forever start -p /var/run/hommy/ -c /usr/local/bin/node --uid "hommydaemon" -a \
-		-l /var/log/hommy.forever.log \
-		-o /var/log/hommy.out \
-		-e /var/log/hommy.err \
-		--sourceDir /home/pi/git/node-projects/hommy/ hommy.js
+	echo starting hommy deamon $JS_FILE
+        if [ -f $PID ]; then
+          do_stop;
+        fi
+	nohup node $JS_FILE 2>&1 > $LOG_FILE &
 	log_end_msg $?
+	echo $! > $PID
 }
 
 do_stop () {
 	echo stopping hommy daemon
-	forever stop /home/pi/git/node-projects/hommy/hommy.js
+	kill -KILL $(cat $PID)
 	log_end_msg $?
+	rm $PID
 }
 
 do_status () {
-	forever list | grep hommydaemon
+	ps -Al | grep $(cat $PID)
+	log_end_msg $?
 }
 
 case "$1" in
