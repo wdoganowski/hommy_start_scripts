@@ -13,7 +13,7 @@
         endscript
 }
 
-/var/log/nexo-proxy.log
+/var/log/nexo_proxy.log
 {
         rotate 30
         daily

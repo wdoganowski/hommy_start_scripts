@@ -34,3 +34,7 @@ echo enabling hommyd
 sudo update-rc.d hommyd enable
 log_end_msg $?
 
+echo pushing to git
+cd $BACKUP
+git commit -a
+git push

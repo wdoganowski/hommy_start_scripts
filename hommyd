@@ -38,7 +38,7 @@ do_stop () {
 }
 
 do_status () {
-	ps -Al | grep $(cat $PID)
+	ps -AeLf | grep $(cat $PID)
 	log_end_msg $?
 }
 
