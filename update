@@ -7,7 +7,7 @@ echo changing dir to /etc/init.d
 cd /etc/init.d
 log_end_msg $?
 
-echo backing up proxyd
+echo backing up nexod
 cp nexod $BACKUP
 log_end_msg $?
 

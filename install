@@ -3,16 +3,16 @@
 . /lib/lsb/init-functions
 BACKUP=/home/pi/git/hommy_start_scripts
 
-echo installing proxyd
-cp $BACKUP/proxyd /etc/init.d/
+echo installing nexod
+sudo cp $BACKUP/nexod /etc/init.d/
 log_end_msg $?
 
 echo installing hommyd
-cp $BACKUP/hommyd /etc/init.d/
+sudo cp $BACKUP/hommyd /etc/init.d/
 log_end_msg $?
 
 echo installing logrotate script
-cp $BACKUP/hommy /etc/logrotate.d/
+sudo cp $BACKUP/hommy /etc/logrotate.d/
 
 echo setting up nexod
 sudo update-rc.d nexod defaults
