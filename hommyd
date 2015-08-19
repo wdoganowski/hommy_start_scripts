@@ -17,7 +17,7 @@ PID=/var/run/hommy.pid
 LOG_FILE=/var/log/hommy.log
 . /lib/lsb/init-functions
 
-export DEBUG=*,-l2cap-ble
+export DEBUG=*,-l2cap-ble,-report
 
 do_start () {
 	# Start proxy and hommy as deamons
